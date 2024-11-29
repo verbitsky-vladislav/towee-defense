@@ -13,9 +13,10 @@ type EnemyLevelProps struct {
 }
 
 type Level struct {
-	Money int64
-	Path  []base.Point
-	X, Y  int64
+	Money         int64
+	Path          []base.Point
+	X, Y          int64
+	Width, Height int64
 
 	Turrets map[base.Point]*TowerLevelProps
 	Enemies []*EnemyLevelProps
