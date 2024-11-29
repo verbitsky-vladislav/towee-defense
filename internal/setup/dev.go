@@ -2,47 +2,76 @@ package setup
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"log"
 	"tower-defense/internal/gameobjects/enemy"
+	level2 "tower-defense/internal/gameobjects/level"
+	"tower-defense/internal/objects/base"
 	"tower-defense/internal/objects/game"
 )
 
+var levelMap = [][]base.Tile{
+	{1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+}
+
 type Game struct {
+	level    *game.Level
 	skeleton *game.Enemy // Экземпляр скелета
+
+	width, height int
 }
 
 func NewGame() *Game {
-	return &Game{}
-}
 
-func (g *Game) Init() error {
-	// Инициализируем анимации скелета
-	if err := enemy.InitSkeletonAnimations(); err != nil {
-		log.Fatalf(err.Error())
-		return err
+	level := level2.NewLevel(levelMap, "forest", 16, 16)
+
+	err := enemy.InitSkeletonAnimations()
+	if err != nil {
+		log.Fatal(err)
 	}
+	skeleton := enemy.NewSkeleton()
 
-	// Создаем экземпляр скелета
-	g.skeleton = enemy.NewSkeleton()
-	return nil
+	return &Game{
+		level:    level,
+		skeleton: skeleton,
+
+		width:  640, // Изначальная ширина
+		height: 480, // Изначальная высота
+	}
 }
 
 func (g *Game) Update() error {
-	// Если скелет существует, обновляем анимацию
-	if g.skeleton != nil {
-		g.skeleton.TypeInfo.Animations[game.Move].Update()
-	}
+	g.skeleton.Update()
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	if g.skeleton != nil {
-		ebitenutil.DebugPrint(screen, "Drawing animation...\n")
-		g.skeleton.TypeInfo.Animations[game.Move].Draw(screen, 100, 200)
-	}
+	g.level.Draw(screen)
+
+	g.skeleton.Draw(screen, 100, 100)
 }
 
-func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return 320, 240 // Примерные размеры экрана
+func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
+	g.width = outsideWidth
+	g.height = outsideHeight
+
+	return outsideWidth, outsideHeight
 }
