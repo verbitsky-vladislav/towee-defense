@@ -1,5 +1,7 @@
 package game
 
+import "tower-defense/internal/objects/base"
+
 type TowerLevelProps struct {
 	Tower  *Tower
 	Target *Enemy
@@ -12,9 +14,9 @@ type EnemyLevelProps struct {
 
 type Level struct {
 	Money int64
-	Path  []Point
+	Path  []base.Point
 	X, Y  int64
 
-	Turrets map[Point]*TowerLevelProps
-	Enimies []*EnemyLevelProps
+	Turrets map[base.Point]*TowerLevelProps
+	Enemies []*EnemyLevelProps
 }
