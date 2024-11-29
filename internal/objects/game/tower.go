@@ -30,5 +30,5 @@ type Tower struct {
 
 	AttackDamage int64
 	AttackSpeed  int64
-	Range        float64 // Дальность атаки
+	AttackRange  float64
 }
