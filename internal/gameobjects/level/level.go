@@ -32,7 +32,7 @@ func NewLevel(mapData [][]base.Tile, levelType game.LevelType, tileW, tileH int3
 		Towers:  nil, // todo add
 		Enemies: nil, // todo add
 	}
-	level.CacheMap() // Предварительная отрисовка карты
+	level.CacheMap()
 	return level
 }
 

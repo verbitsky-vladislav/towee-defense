@@ -9,12 +9,9 @@ import (
 	"tower-defense/internal/system/spriteloader"
 )
 
-// Словарь для хранения ресурсов анимаций скелета
 var skeletonAnimations = make(map[game.Animation]*animation.Resource)
 
-// InitSkeletonAnimations загружает анимации для скелета
 func InitSkeletonAnimations() error {
-	// Конфигурация анимаций скелета
 	animationConfigs := map[string]spriteloader.SpriteConfig{
 		"Idle": {
 			FileName:    "idle.png",
@@ -53,14 +50,12 @@ func InitSkeletonAnimations() error {
 		},
 	}
 
-	// Загружаем анимации
 	animations, err := spriteloader.LoadSprites("assets/enemy/skeleton/animations/", animationConfigs)
 	if err != nil {
 		log.Fatalf("Ошибка загрузки анимаций: %v", err)
 		return err
 	}
 
-	// Преобразуем загруженные анимации в AnimationResource
 	for name, data := range animations {
 		switch name {
 		case "Idle":
@@ -79,12 +74,10 @@ func InitSkeletonAnimations() error {
 	return nil
 }
 
-// Skeleton описывает скелета как врага
 type Skeleton struct {
 	Enemy *game.Enemy
 }
 
-// newSkeletonTypeInfo создает описание типа для скелета
 func newSkeletonTypeInfo() *game.EnemyTypeInfo {
 	// Сопоставление анимаций для скелета
 	var skAnimations = map[game.Animation]*animation.Instance{
@@ -101,7 +94,6 @@ func newSkeletonTypeInfo() *game.EnemyTypeInfo {
 	}
 }
 
-// NewSkeleton создает новый экземпляр скелета
 func NewSkeleton() *game.Enemy {
 	typeInfo := newSkeletonTypeInfo()
 
@@ -112,21 +104,18 @@ func NewSkeleton() *game.Enemy {
 	}
 }
 
-// Update обновляет анимации и состояние врага
 func (s *Skeleton) Update() {
 	for _, animInstance := range s.Enemy.TypeInfo.Animations {
 		animInstance.Update()
 	}
 }
 
-// Draw рисует текущий кадр анимации скелета
 func (s *Skeleton) Draw(screen *ebiten.Image, x, y float64, scale float64) {
 	if animInstance, exists := s.Enemy.TypeInfo.Animations[game.Idle]; exists {
 		animInstance.Draw(screen, x, y, scale)
 	}
 }
 
-// TakeDamage уменьшает здоровье врага
 func (s *Skeleton) TakeDamage(amount int64) {
 	s.Enemy.Health -= amount
 	if s.Enemy.Health < 0 {
@@ -134,7 +123,6 @@ func (s *Skeleton) TakeDamage(amount int64) {
 	}
 }
 
-// IsDead проверяет, жив ли враг
 func (s *Skeleton) IsDead() bool {
 	return s.Enemy.Health <= 0
 }

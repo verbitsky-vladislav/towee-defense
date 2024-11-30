@@ -27,7 +27,7 @@ type EnemyTypeInfo struct {
 }
 
 type Enemy struct {
-	Type     EnemyType // Тип врага -> конкретная информация указана
+	Type     EnemyType
 	TypeInfo EnemyTypeInfo
 	Health   int64
 }

@@ -38,8 +38,8 @@ type Level struct {
 
 func (l *Level) Draw(screen *ebiten.Image, scale float64, offsetX, offsetY float64) {
 	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Scale(scale, scale)         // Применяем масштаб
-	op.GeoM.Translate(offsetX, offsetY) // Центрируем карту
+	op.GeoM.Scale(scale, scale)
+	op.GeoM.Translate(offsetX, offsetY)
 	screen.DrawImage(l.MapCache, op)
 }
 

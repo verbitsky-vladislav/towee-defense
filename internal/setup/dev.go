@@ -34,7 +34,7 @@ var levelMap = [][]base.Tile{
 
 type Game struct {
 	level    *game.Level
-	skeleton *game.Enemy // Экземпляр скелета
+	skeleton *game.Enemy
 
 	width, height int
 }
@@ -53,8 +53,8 @@ func NewGame() *Game {
 		level:    level,
 		skeleton: skeleton,
 
-		width:  640, // Изначальная ширина
-		height: 480, // Изначальная высота
+		width:  640,
+		height: 480,
 	}
 }
 
@@ -64,7 +64,6 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	// Рассчитываем коэффициенты масштабирования
 	scaleX := float64(g.width) / float64(g.level.W*g.level.TileW)
 	scaleY := float64(g.height) / float64(g.level.H*g.level.TileH)
 	scale := scaleX
@@ -72,14 +71,11 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		scale = scaleY
 	}
 
-	// Центрируем карту
 	offsetX := (float64(g.width) - float64(g.level.W*g.level.TileW)*scale) / 2
 	offsetY := (float64(g.height) - float64(g.level.H*g.level.TileH)*scale) / 2
 
-	// Отрисовываем карту
 	g.level.Draw(screen, scale, offsetX, offsetY)
 
-	// Отрисовываем врага (с масштабированием)
 	g.skeleton.Draw(screen, 100*scale+offsetX, 100*scale+offsetY, scale)
 }
 
