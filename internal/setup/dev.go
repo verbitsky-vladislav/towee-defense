@@ -64,9 +64,23 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	g.level.Draw(screen)
+	// Рассчитываем коэффициенты масштабирования
+	scaleX := float64(g.width) / float64(g.level.W*g.level.TileW)
+	scaleY := float64(g.height) / float64(g.level.H*g.level.TileH)
+	scale := scaleX
+	if scaleY < scaleX {
+		scale = scaleY
+	}
 
-	g.skeleton.Draw(screen, 100, 100)
+	// Центрируем карту
+	offsetX := (float64(g.width) - float64(g.level.W*g.level.TileW)*scale) / 2
+	offsetY := (float64(g.height) - float64(g.level.H*g.level.TileH)*scale) / 2
+
+	// Отрисовываем карту
+	g.level.Draw(screen, scale, offsetX, offsetY)
+
+	// Отрисовываем врага (с масштабированием)
+	g.skeleton.Draw(screen, 100*scale+offsetX, 100*scale+offsetY, scale)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {

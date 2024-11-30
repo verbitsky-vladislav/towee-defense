@@ -36,8 +36,10 @@ type Level struct {
 	Enemies []*EnemyLevelProps
 }
 
-func (l *Level) Draw(screen *ebiten.Image) {
+func (l *Level) Draw(screen *ebiten.Image, scale float64, offsetX, offsetY float64) {
 	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Scale(scale, scale)         // Применяем масштаб
+	op.GeoM.Translate(offsetX, offsetY) // Центрируем карту
 	screen.DrawImage(l.MapCache, op)
 }
 

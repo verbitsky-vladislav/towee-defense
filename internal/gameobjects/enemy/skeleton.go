@@ -120,9 +120,9 @@ func (s *Skeleton) Update() {
 }
 
 // Draw рисует текущий кадр анимации скелета
-func (s *Skeleton) Draw(screen *ebiten.Image, x, y float64) {
+func (s *Skeleton) Draw(screen *ebiten.Image, x, y float64, scale float64) {
 	if animInstance, exists := s.Enemy.TypeInfo.Animations[game.Idle]; exists {
-		animInstance.Draw(screen, x, y)
+		animInstance.Draw(screen, x, y, scale)
 	}
 }
 

@@ -36,6 +36,6 @@ func (e *Enemy) Update() {
 	e.TypeInfo.Animations[Idle].Update()
 }
 
-func (e *Enemy) Draw(screen *ebiten.Image, x, y float64) {
-	e.TypeInfo.Animations[Idle].Draw(screen, x, y)
+func (e *Enemy) Draw(screen *ebiten.Image, x, y float64, scale float64) {
+	e.TypeInfo.Animations[Idle].Draw(screen, x, y, scale)
 }

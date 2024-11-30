@@ -34,9 +34,11 @@ func (ai *Instance) Update() {
 }
 
 // Draw рисует текущий кадр экземпляра анимации
-func (ai *Instance) Draw(screen *ebiten.Image, x, y float64) {
+func (ai *Instance) Draw(screen *ebiten.Image, x, y float64, scale float64) {
 	frame := ai.Resource.Cache[ai.DirectionIndex][ai.FrameIndex]
 	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Scale(scale, scale) // Масштабируем врага
+	op.GeoM.Translate(x, y)
 	op.GeoM.Translate(x, y)
 	screen.DrawImage(frame, op)
 }
